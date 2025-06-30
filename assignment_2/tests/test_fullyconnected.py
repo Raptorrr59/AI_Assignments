@@ -87,12 +87,12 @@ class TestFullyConnected(unittest.TestCase):
         # For dW[0,0]: (1*0.5 + 4*0.2) / 2 = (0.5 + 0.8)/2 = 1.3/2 = 0.65
         # For dW[0,1]: (1*1.0 + 4*0.4) / 2 = (1.0 + 1.6)/2 = 2.6/2 = 1.3
         # ... and so on
-        expected_dW = np.dot(input_data.T, output_grad) / N
+        expected_dW = np.dot(input_data.T, output_grad)
         
         # db = sum(output_grad, axis=0, keepdims=True) / N
         # db_sum_axis0 = [0.5+0.2, 1.0+0.4] = [0.7, 1.4]
         # expected_db = [[0.7/2, 1.4/2]] = [[0.35, 0.7]]
-        expected_db = np.sum(output_grad, axis=0, keepdims=True) / N
+        expected_db = np.sum(output_grad, axis=0, keepdims=True)
         
         # d_input = output_grad @ weights.T
         # output_grad (2,2) @ weights.T (2,3) -> (2,3)
@@ -188,8 +188,8 @@ class TestFullyConnected(unittest.TestCase):
         
         # Analytical dW, db, dInput (calculated based on the logic in backward() but without updates)
         # Note: d_out_mock is used as output_grad for calculating these analytical gradients
-        analytical_dW = np.dot(fc.input_tensor.T, d_out_mock) / N # Division by N for averaging
-        analytical_db = np.sum(d_out_mock, axis=0, keepdims=True) / N # Division by N for averaging
+        analytical_dW = np.dot(fc.input_tensor.T, d_out_mock)
+        analytical_db = np.sum(d_out_mock, axis=0, keepdims=True)
         analytical_dInput = np.dot(d_out_mock, fc.weights.T)
         
         np.testing.assert_array_almost_equal(numerical_dW, analytical_dW, decimal=3, err_msg="Weight gradients don't match")

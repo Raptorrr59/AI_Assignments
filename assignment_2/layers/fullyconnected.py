@@ -19,9 +19,9 @@ class FullyConnected:
         N = self.input_tensor.shape[0]
 
         # dW shape: (input_size, N) @ (N, output_size) -> (input_size, output_size)
-        dW = np.dot(self.input_tensor.T, output_grad) / N
+        dW = np.dot(self.input_tensor.T, output_grad)
         # db shape: sum over N -> (1, output_size)
-        db = np.sum(output_grad, axis=0, keepdims=True) / N 
+        db = np.sum(output_grad, axis=0, keepdims=True)
         # d_input shape: (N, output_size) @ (output_size, input_size) -> (N, input_size)
         d_input = np.dot(output_grad, self.weights.T)
 

@@ -58,10 +58,9 @@ class TestLeakyReLU(unittest.TestCase):
     def test_leaky_relu_forward(self):
         alpha = 0.1
         leaky_relu = LeakyReLU(alpha=alpha)
-        input_data = np.array([[[-1, 0, 1], [-2, 2]],
-                               [[-0.5, 0.5], [1.5, -1.5]]]) # (2,2,2) and (2,2,2) for last dim
-        expected_output = np.array([[[-1*alpha, 0*alpha, 1], [-2*alpha, 2]],
-                                    [[-0.5*alpha, 0.5], [1.5, -1.5*alpha]]])
+        input_data = np.array([[[-1, 0, 1], [-2, 2, 3]],
+                               [[-0.5, 0.5, 1.0], [1.5, -1.5, 2.0]]]) # (2,2,3)
+        expected_output = np.where(input_data > 0, input_data, alpha * input_data)
         output = leaky_relu.forward(input_data)
         np.testing.assert_array_almost_equal(output, expected_output, decimal=5)
         self.assertEqual(output.shape, input_data.shape)
@@ -69,12 +68,11 @@ class TestLeakyReLU(unittest.TestCase):
     def test_leaky_relu_backward(self):
         alpha = 0.1
         leaky_relu = LeakyReLU(alpha=alpha)
-        input_data = np.array([[[-1, 0, 1], [-2, 2]],
-                               [[-0.5, 0.5], [1.5, -1.5]]])
+        input_data = np.array([[[-1, 0, 1], [-2, 2, 3]],
+                               [[-0.5, 0.5, 1.0], [1.5, -1.5, 2.0]]]) # (2,2,3)
         leaky_relu.forward(input_data)  # Store input for backward pass
         output_grad = np.ones_like(input_data)
-        expected_d_input = np.array([[[alpha, alpha, 1], [alpha, 1]],
-                                     [[alpha, 1], [1, alpha]]])
+        expected_d_input = np.where(input_data > 0, 1, alpha)
         d_input = leaky_relu.backward(output_grad, learning_rate=0.01)
         np.testing.assert_array_almost_equal(d_input, expected_d_input, decimal=5)
         self.assertEqual(d_input.shape, input_data.shape)
