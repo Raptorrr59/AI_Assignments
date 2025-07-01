@@ -50,7 +50,7 @@ class TestFullyConnected(unittest.TestCase):
         _ = fc.forward(input_data)
         
         output_grad = np.random.rand(N, output_size) # Gradient from next layer
-        d_input = fc.backward(output_grad, learning_rate=0.01)
+        d_input = fc.backward(output_grad, optimizer=None)
         
         self.assertEqual(d_input.shape, (N, input_size)) # Matches forward input shape
         self.assertEqual(fc.weights.shape, (input_size, output_size)) # Check weights shape after update
@@ -60,7 +60,7 @@ class TestFullyConnected(unittest.TestCase):
         N = 2
         input_size = 3
         output_size = 2
-        learning_rate = 0.1
+        learning_rate = 0.01  # Match the fallback learning rate in the layer
         fc = FullyConnected(input_size=input_size, output_size=output_size)
         
         # Weights (input_size, output_size) -> (3,2)
@@ -105,7 +105,7 @@ class TestFullyConnected(unittest.TestCase):
         expected_bias_updated = initial_bias - learning_rate * expected_db
 
         # Perform backward pass
-        d_input = fc.backward(output_grad, learning_rate)
+        d_input = fc.backward(output_grad, optimizer=None)
 
         np.testing.assert_array_almost_equal(d_input, expected_d_input, decimal=5)
         np.testing.assert_array_almost_equal(fc.weights, expected_weights_updated, decimal=5)

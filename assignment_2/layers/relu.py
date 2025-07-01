@@ -5,7 +5,7 @@ class ReLU:
         self.input = input
         return np.maximum(0, input)
 
-    def backward(self, output_grad, learning_rate):
+    def backward(self, output_grad, optimizer=None):
         return output_grad * (self.input > 0)
 
 class LeakyReLU:
@@ -16,5 +16,5 @@ class LeakyReLU:
         self.input = input
         return np.where(input > 0, input, self.alpha * input)
 
-    def backward(self, output_grad, learning_rate):
+    def backward(self, output_grad, optimizer=None):
         return output_grad * np.where(self.input > 0, 1, self.alpha)

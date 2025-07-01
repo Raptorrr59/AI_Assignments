@@ -65,14 +65,13 @@ class TestConv2D(unittest.TestCase):
         self.assertEqual(output.shape, (1, 1, 2, 2)) # (N, out_channels, out_h, out_w)
 
     def test_conv2d_backward_shape(self):
-        conv = Conv2D(in_channels=1, out_channels=2, kernel_size=3, stride=1, padding=1)
-        input_data = np.random.rand(1, 1, 10, 10) # (N, C, H, W)
-        output = conv.forward(input_data)
+        conv = Conv2D(3, 2, 3)
+        input_tensor = np.random.randn(1, 3, 5, 5)
+        output = conv.forward(input_tensor)
+        d_out = np.random.randn(*output.shape)
         
-        # d_out should have the same shape as the output of the forward pass
-        d_out = np.random.rand(*output.shape) 
-        d_input = conv.backward(d_out, learning_rate=0.01)
-        self.assertEqual(d_input.shape, input_data.shape)
+        d_input = conv.backward(d_out, optimizer=None)
+        self.assertEqual(d_input.shape, input_tensor.shape)
 
     def test_conv2d_backward_gradient_check(self):
         # Use a very small network and input for numerical gradient checking
@@ -136,7 +135,7 @@ class TestConv2D(unittest.TestCase):
         
         # --- Analytical Gradients (from backward pass) ---
         _ = conv.forward(input_data_batch) # Perform forward pass to set internal states (e.g., self.cols)
-        analytical_dInput = conv.backward(d_out_mock, learning_rate=0) # Get grads without updates
+        analytical_dInput = conv.backward(d_out_mock, optimizer=None) # Get grads without updates
         analytical_dW = conv.dW
         analytical_db = conv.db
 

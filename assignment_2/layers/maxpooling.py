@@ -34,7 +34,7 @@ class MaxPool2D:
 
         return output
 
-    def backward(self, d_out, learning_rate):
+    def backward(self, d_out, optimizer=None):
         N, C, out_h, out_w = d_out.shape # d_out shape is (N, C, out_h, out_w)
         d_input = np.zeros_like(self.input_tensor)
 

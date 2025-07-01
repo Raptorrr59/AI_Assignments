@@ -30,7 +30,7 @@ class TestReLU(unittest.TestCase):
                                     [0, 1, 0]],
                                    [[0, 1, 0],
                                     [1, 0, 1]]])
-        d_input = relu.backward(output_grad, learning_rate=0.01)
+        d_input = relu.backward(output_grad, optimizer=None)
         np.testing.assert_array_equal(d_input, expected_d_input)
         self.assertEqual(d_input.shape, input_data.shape)
 
@@ -43,7 +43,7 @@ class TestReLU(unittest.TestCase):
                                 [[0.5, 0.6], [0.7, 0.8]]])
         expected_d_input = np.array([[[0, 0.2], [0, 0.4]],
                                      [[0.5, 0], [0, 0.8]]])
-        d_input = relu.backward(output_grad, learning_rate=0.01)
+        d_input = relu.backward(output_grad, optimizer=None)
         np.testing.assert_array_almost_equal(d_input, expected_d_input, decimal=5)
         self.assertEqual(d_input.shape, input_data.shape)
 
@@ -73,7 +73,7 @@ class TestLeakyReLU(unittest.TestCase):
         leaky_relu.forward(input_data)  # Store input for backward pass
         output_grad = np.ones_like(input_data)
         expected_d_input = np.where(input_data > 0, 1, alpha)
-        d_input = leaky_relu.backward(output_grad, learning_rate=0.01)
+        d_input = leaky_relu.backward(output_grad, optimizer=None)
         np.testing.assert_array_almost_equal(d_input, expected_d_input, decimal=5)
         self.assertEqual(d_input.shape, input_data.shape)
 
@@ -87,7 +87,7 @@ class TestLeakyReLU(unittest.TestCase):
                                 [[0.5, 0.6], [0.7, 0.8]]])
         expected_d_input = np.array([[[0.1*alpha, 0.2*1], [0.3*alpha, 0.4*1]],
                                      [[0.5*1, 0.6*alpha], [0.7*alpha, 0.8*1]]])
-        d_input = leaky_relu.backward(output_grad, learning_rate=0.01)
+        d_input = leaky_relu.backward(output_grad, optimizer=None)
         np.testing.assert_array_almost_equal(d_input, expected_d_input, decimal=5)
         self.assertEqual(d_input.shape, input_data.shape)
 

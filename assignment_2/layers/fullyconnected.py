@@ -14,7 +14,7 @@ class FullyConnected:
         # Output shape: (N, input_size) @ (input_size, output_size) -> (N, output_size)
         return np.dot(input_tensor, self.weights) + self.bias
 
-    def backward(self, output_grad, learning_rate):
+    def backward(self, output_grad, optimizer=None):
         # output_grad shape: (N, output_size)
         N = self.input_tensor.shape[0]
 
@@ -25,8 +25,14 @@ class FullyConnected:
         # d_input shape: (N, output_size) @ (output_size, input_size) -> (N, input_size)
         d_input = np.dot(output_grad, self.weights.T)
 
-        # Update parameters
-        self.weights -= learning_rate * dW
-        self.bias -= learning_rate * db
+        # Update parameters using optimizer if provided
+        if optimizer is not None:
+            self.weights = optimizer.update(self.weights, dW, 'fc_weights')
+            self.bias = optimizer.update(self.bias, db, 'fc_bias')
+        else:
+            # Fallback to simple SGD if no optimizer provided
+            learning_rate = 0.01
+            self.weights -= learning_rate * dW
+            self.bias -= learning_rate * db
 
         return d_input

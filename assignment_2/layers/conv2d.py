@@ -33,7 +33,7 @@ class Conv2D:
             out[i] = (np.dot(self.col_W, self.cols[i]) + self.bias[:, np.newaxis]).reshape(self.out_channels, self.out_h, self.out_w)
         return out
 
-    def backward(self, d_out, learning_rate):
+    def backward(self, d_out, optimizer=None):
         N, _, _, _ = d_out.shape
         KH, KW = self.kernel_size
 
@@ -60,8 +60,14 @@ class Conv2D:
         self.dW = dW_acc / N # Average gradients over the batch
         self.db = db_acc / N # Average gradients over the batch
 
-        # Update weights and biases using the calculated gradients
-        self.weights -= learning_rate * self.dW
-        self.bias -= learning_rate * self.db
+        # Update weights and biases using optimizer if provided
+        if optimizer is not None:
+            self.weights = optimizer.update(self.weights, self.dW, 'conv_weights')
+            self.bias = optimizer.update(self.bias, self.db, 'conv_bias')
+        else:
+            # Fallback to simple SGD if no optimizer provided
+            learning_rate = 0.01
+            self.weights -= learning_rate * self.dW
+            self.bias -= learning_rate * self.db
 
         return d_input_acc
