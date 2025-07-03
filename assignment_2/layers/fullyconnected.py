@@ -1,12 +1,15 @@
 import numpy as np
 
 class FullyConnected:
-    def __init__(self, input_size, output_size):
+    def __init__(self, input_size, output_size, regularizer=None, regularizer_grad=None, reg_lambda=0.0):
         # Xavier initialization
         # Weights: (input_size, output_size) for easier dot product with (N, input_size)
         scale = np.sqrt(1. / input_size) 
         self.weights = np.random.randn(input_size, output_size) * scale
         self.bias = np.zeros((1, output_size)) # Bias: (1, output_size) for broadcasting
+        self.regularizer = regularizer
+        self.regularizer_grad = regularizer_grad
+        self.reg_lambda = reg_lambda
 
     def forward(self, input_tensor):
         # input_tensor shape: (N, input_size)
@@ -25,6 +28,10 @@ class FullyConnected:
         # d_input shape: (N, output_size) @ (output_size, input_size) -> (N, input_size)
         d_input = np.dot(output_grad, self.weights.T)
 
+        # Add regularization gradient if provided
+        if self.regularizer_grad is not None and self.reg_lambda > 0.0:
+            dW += self.reg_lambda * self.regularizer_grad(self.weights)
+
         # Update parameters using optimizer if provided
         if optimizer is not None:
             self.weights = optimizer.update(self.weights, dW, 'fc_weights')
@@ -36,3 +43,11 @@ class FullyConnected:
             self.bias -= learning_rate * db
 
         return d_input
+
+    # For layers with weights and biases
+    def get_params(self):
+        return {'weights': self.weights, 'bias': self.bias}
+    
+    def set_params(self, params):
+        self.weights = params['weights']
+        self.bias = params['bias']

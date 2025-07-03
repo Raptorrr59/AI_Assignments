@@ -2,12 +2,15 @@ import numpy as np
 from assignment_2.utils.im2col import im2col, col2im
 
 class Conv2D:
-    def __init__(self, in_channels, out_channels, kernel_size, stride=1, padding=0):
+    def __init__(self, in_channels, out_channels, kernel_size, stride=1, padding=0, regularizer=None, regularizer_grad=None, reg_lambda=0.0):
         self.in_channels = in_channels
         self.out_channels = out_channels
         self.kernel_size = kernel_size if isinstance(kernel_size, tuple) else (kernel_size, kernel_size)
         self.stride = stride
         self.padding = padding
+        self.regularizer = regularizer
+        self.regularizer_grad = regularizer_grad
+        self.reg_lambda = reg_lambda
 
         # Xavier Initialization
         scale = np.sqrt(1. / (in_channels * np.prod(self.kernel_size)))
@@ -57,6 +60,10 @@ class Conv2D:
             db_acc += db_sample
             d_input_acc[i] = d_input_sample
         
+        # Add regularization gradient if provided
+        if self.regularizer_grad is not None and self.reg_lambda > 0.0:
+            dW_acc += self.reg_lambda * self.regularizer_grad(self.weights)
+
         self.dW = dW_acc / N # Average gradients over the batch
         self.db = db_acc / N # Average gradients over the batch
 
@@ -71,3 +78,10 @@ class Conv2D:
             self.bias -= learning_rate * self.db
 
         return d_input_acc
+
+    def get_params(self):
+        return {'weights': self.weights, 'bias': self.bias}
+    
+    def set_params(self, params):
+        self.weights = params['weights']
+        self.bias = params['bias']
