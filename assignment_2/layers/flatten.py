@@ -1,6 +1,7 @@
+from .base import Layer
 import numpy as np
 
-class Flatten:
+class Flatten(Layer):
     def forward(self, input_tensor):
         self.input_shape = input_tensor.shape  # Save for backward (N, C, H, W) or (N, D)
         N = input_tensor.shape[0]

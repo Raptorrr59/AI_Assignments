@@ -1,7 +1,8 @@
 import numpy as np
 from assignment_2.utils.im2col import im2col, col2im
+from .base import Layer
 
-class Conv2D:
+class Conv2D(Layer):
     def __init__(self, in_channels, out_channels, kernel_size, stride=1, padding=0, regularizer=None, regularizer_grad=None, reg_lambda=0.0):
         self.in_channels = in_channels
         self.out_channels = out_channels

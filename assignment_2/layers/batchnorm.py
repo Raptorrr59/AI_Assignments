@@ -1,6 +1,7 @@
 import numpy as np
+from .base import Layer
 
-class BatchNorm:
+class BatchNorm(Layer):
     def __init__(self, num_features, momentum=0.9, eps=1e-5):
         self.gamma = np.ones((1, num_features))
         self.beta = np.zeros((1, num_features))
@@ -11,6 +12,20 @@ class BatchNorm:
         # Running stats for inference
         self.running_mean = np.zeros((1, num_features))
         self.running_var = np.ones((1, num_features))
+
+    def get_params(self):
+        return {
+            'gamma': self.gamma,
+            'beta': self.beta,
+            'running_mean': self.running_mean,
+            'running_var': self.running_var
+        }
+
+    def set_params(self, params):
+        self.gamma = params.get('gamma', self.gamma)
+        self.beta = params.get('beta', self.beta)
+        self.running_mean = params.get('running_mean', self.running_mean)
+        self.running_var = params.get('running_var', self.running_var)
 
     def forward(self, input):
         self.input = input  # shape: (1, features)

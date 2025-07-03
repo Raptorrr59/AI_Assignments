@@ -12,6 +12,7 @@ from assignment_2.loss.mse import mse, mse_prime
 from assignment_2.optimizers import SGD, Adam
 from .metrics import accuracy, confusion_matrix
 from assignment_2.regularization import l2_penalty, l2_gradient
+import argparse
 
 def preprocess_data(x_train, y_train, x_test, y_test):
     """Preprocess CIFAR-10 data"""
@@ -152,7 +153,7 @@ class Model:
                 print("      Backward pass done.")
                 print(f"    Batch {batch_idx+1}/{n_batches} - End")
                 
-                if batch_idx + 1 >= 25:
+                if batch_idx + 1 >= 250:
                     print("    Reached batch limit for quick test.")
                     break
             
@@ -165,12 +166,12 @@ class Model:
             
             # Validation
             if x_val is not None and y_val is not None:
-                val_loss, val_accuracy = self.evaluate(x_val, y_val, batch_size)
+                val_loss, val_accuracy = self.evaluate(x_val, y_val, batch_size, max_batches=25)
                 if verbose:
                     print(f"  Validation - Loss: {val_loss:.4f}, Accuracy: {val_accuracy:.4f}")
             print(f"Epoch {epoch+1}/{epochs} - Done\n")
 
-    def evaluate(self, x_test, y_test, batch_size=32):
+    def evaluate(self, x_test, y_test, batch_size=32, max_batches=25):
         """Evaluate the model on test data"""
         # Set evaluation mode
         for layer in self.layers:
@@ -208,6 +209,9 @@ class Model:
             predictions = np.argmax(output, axis=1)
             true_labels = np.argmax(y_batch, axis=1)
             correct_predictions += np.sum(predictions == true_labels)
+            
+            if max_batches is not None and batch_idx + 1 >= max_batches:
+                break
         
         # Set training mode back
         for layer in self.layers:
@@ -236,6 +240,10 @@ class Model:
 
 
 def main():
+    parser = argparse.ArgumentParser(description="CNN CIFAR-10 Trainer/Loader")
+    parser.add_argument('--load-model', type=str, default=None, help='Path to model file to load and evaluate only')
+    args = parser.parse_args()
+
     print("Loading CIFAR-10 data...")
     try:
         x_train, y_train, x_test, y_test = load_cifar10("assignment_2/data/cifar-10-batches-py/")
@@ -249,6 +257,28 @@ def main():
     print("Preprocessing data...")
     x_train, y_train, x_test, y_test = preprocess_data(x_train, y_train, x_test, y_test)
     
+    if args.load_model:
+        print(f"Loading model from {args.load_model}...")
+        model = create_cifar10_model(reg_lambda=0.001)
+        model.use(mse, mse_prime)
+        model.set_optimizer(Adam(lr=0.001))
+        model.load(args.load_model)
+        print("Evaluating loaded model on test set...")
+        test_loss, test_accuracy = model.evaluate(x_test, y_test)
+        print(f"Final Test - Loss: {test_loss:.4f}, Accuracy: {test_accuracy:.4f}")
+        y_pred = []
+        for i in range(0, len(x_test), 32):
+            batch = x_test[i:i+32]
+            preds = model.predict(batch)
+            y_pred.append(preds)
+        y_pred = np.vstack(y_pred)
+        acc = accuracy(y_test, y_pred)
+        print("Loaded model accuracy:", acc)
+        cm = confusion_matrix(y_test, y_pred)
+        print("\nConfusion Matrix:")
+        print(cm)
+        return
+
     # Create model
     print("Creating model...")
     model = create_cifar10_model(reg_lambda=0.001)
@@ -299,7 +329,7 @@ def main():
 
     # Load model
     model.load("assignment_2/models/model.npz")
-    acc = accuracy(y_test, [model.predict(x).flatten() for x in x_test])
+    acc = accuracy(y_test, model.predict(x_test))
     print("Loaded model accuracy:", acc)
 
 

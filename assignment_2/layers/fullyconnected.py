@@ -1,6 +1,7 @@
 import numpy as np
+from .base import Layer
 
-class FullyConnected:
+class FullyConnected(Layer):
     def __init__(self, input_size, output_size, regularizer=None, regularizer_grad=None, reg_lambda=0.0):
         # Xavier initialization
         # Weights: (input_size, output_size) for easier dot product with (N, input_size)

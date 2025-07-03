@@ -1,6 +1,7 @@
 import numpy as np
+from .base import Layer
 
-class ReLU:
+class ReLU(Layer):
     def forward(self, input):
         self.input = input
         return np.maximum(0, input)
@@ -8,7 +9,7 @@ class ReLU:
     def backward(self, output_grad, optimizer=None):
         return output_grad * (self.input > 0)
 
-class LeakyReLU:
+class LeakyReLU(Layer):
     def __init__(self, alpha=0.01):
         self.alpha = alpha
 
