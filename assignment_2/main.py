@@ -153,9 +153,6 @@ class Model:
                 print("      Backward pass done.")
                 print(f"    Batch {batch_idx+1}/{n_batches} - End")
                 
-                if batch_idx + 1 >= 250:
-                    print("    Reached batch limit for quick test.")
-                    break
             
             # Calculate metrics
             avg_loss = (total_loss + reg_loss) / n_samples
