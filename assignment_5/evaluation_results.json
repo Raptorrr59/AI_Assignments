@@ -1,0 +1,21 @@
+{
+  "perplexity": 1134.5945390115783,
+  "generated_samples": [
+    "w h a t i s m a c h i n e l e a r n i n g ? <dummy_365> <dummy_353> <dummy_816> <dummy_551> <dummy_274> <dummy_947> <dummy_802> K X <dummy_275> <dummy_277> <dummy_315> <dummy_564> k <dummy_842> <dummy_720> <dummy_761> <dummy_950> <dummy_118> <dummy_514> q <dummy_293> <dummy_661> <dummy_456> <dummy_743> <dummy_535> <dummy_742> <dummy_424> <dummy_906> <dummy_732> <dummy_213> <dummy_418> <dummy_531> N <dummy_321> <dummy_200> <dummy_599> 5 <dummy_134> in <dummy_665> <dummy_103> Z <dummy_487> <dummy_714> <dummy_777> <dummy_92> by <dummy_529> <dummy_774>",
+    "e x p l a i n a r t i f i c i a l i n t e l l i g e n c e <dummy_238> 8 <dummy_322> <dummy_144> <dummy_304> <dummy_649> <dummy_847> <dummy_314> <dummy_425> <dummy_221> <dummy_622> <dummy_159> <dummy_714> <dummy_160> <dummy_748> <dummy_380> <dummy_502> <dummy_195> <dummy_511> <dummy_389> <dummy_390> j <dummy_239> <dummy_999> <dummy_264> <dummy_344> <dummy_785> <dummy_433> <dummy_944> <dummy_549> <dummy_791> <dummy_756> <dummy_544> <dummy_780> <dummy_317> 9 <dummy_388> <dummy_528> <dummy_193> <dummy_669> <dummy_267> 7 <dummy_816> <dummy_906> <dummy_174> <dummy_324> <dummy_224> <dummy_145> <dummy_339> 5",
+    "h o w d o n e u r a l n e t w o r k s w o r k ? <dummy_800> <dummy_97> <dummy_218> <dummy_750> <dummy_356> <dummy_420> <dummy_687> <dummy_832> <dummy_929> <dummy_818> <dummy_134> <dummy_970> <dummy_841> <dummy_337> <dummy_195> <dummy_694> <dummy_433> <dummy_766> <dummy_697> <dummy_212> <dummy_952> <dummy_201> <dummy_354> <dummy_981> <dummy_870> <dummy_271> F <dummy_632> <dummy_972> <dummy_143> <dummy_132> <dummy_344> <dummy_391> <dummy_902> <dummy_740> <dummy_687> <dummy_985> <dummy_672> <dummy_680> <dummy_271> <dummy_121> <dummy_787> <dummy_874> <dummy_956> <dummy_920> <dummy_610> 1 <dummy_674> <dummy_222> <dummy_882>"
+  ],
+  "speed_metrics": {
+    "avg_time": 0.18655805587768554,
+    "std_time": 0.03034857578034756,
+    "tokens_per_second": 5360.261690632312
+  },
+  "model_parameters": 3699712,
+  "model_config": {
+    "vocab_size": 1000,
+    "max_seq_len": 128,
+    "n_layers": 4,
+    "n_heads": 4,
+    "d_model": 256
+  }
+}

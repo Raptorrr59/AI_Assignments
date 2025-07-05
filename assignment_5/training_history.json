@@ -1,0 +1,27 @@
+[
+  {
+    "phase": "pretrain",
+    "epoch": 0,
+    "loss": 7.025856261677688
+  },
+  {
+    "phase": "pretrain",
+    "epoch": 1,
+    "loss": 7.025921801923252
+  },
+  {
+    "phase": "sft",
+    "epoch": 0,
+    "loss": 6.998702148784759
+  },
+  {
+    "phase": "rm",
+    "epoch": 0,
+    "loss": 0.4629110704601442
+  },
+  {
+    "phase": "rlhf",
+    "epoch": 0,
+    "loss": 0.0012685736076636206
+  }
+]
